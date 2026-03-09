@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>NEXUS//PREMIUM</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow:hidden;position:relative}
+canvas#matrix{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.15;pointer-events:none;z-index:1}
+.nexus-container{position:relative;z-index:10;width:100%;max-width:600px;padding:20px;text-align:center}
+.glitch-wrapper{margin-bottom:40px}
+.glitch-title{font-size:clamp(3rem,15vw,7rem);font-weight:900;color:#00ff9d;text-transform:uppercase;text-shadow:0 0 30px #00ff9d,2px 2px 0 #ff00c1,-2px -2px 0 #00ff9d;animation:glitch 3s infinite;letter-spacing:10px;line-height:1}
+.glitch-sub{color:#00ff9d;font-size:clamp(.8rem,4vw,1.2rem);letter-spacing:8px;margin-top:10px;opacity:.7;text-transform:uppercase}
+.status-panel{background:rgba(0,20,10,.8);backdrop-filter:blur(10px);border:1px solid #00ff9d40;border-radius:30px;padding:30px;margin:30px 0;box-shadow:0 0 50px rgba(0,255,157,.2)}
+.status-item{display:flex;justify-content:space-between;align-items:center;padding:15px 0;border-bottom:1px solid #00ff9d20;color:#00ff9d;font-size:1rem;text-transform:uppercase;letter-spacing:2px}
+.status-item:last-child{border-bottom:none}
+.status-label{opacity:.6;font-weight:300}
+.status-value{font-weight:700;color:#fff;text-shadow:0 0 10px #00ff9d}
+.progress-bar{width:100%;height:2px;background:#00ff9d20;margin:20px 0;position:relative;overflow:hidden}
+.progress-fill{position:absolute;top:0;left:0;height:100%;width:0%;background:#00ff9d;box-shadow:0 0 20px #00ff9d;animation:progress 1s linear forwards}
+@keyframes progress{0%{width:0%}100%{width:100%}}
+.countdown{font-size:5rem;font-weight:900;color:#00ff9d;text-shadow:0 0 50px #00ff9d;line-height:1;margin:20px 0;font-family:monospace}
+.countdown-label{color:#00ff9d60;font-size:.8rem;letter-spacing:4px;text-transform:uppercase}
+.warning-text{color:#ff3b3b;font-size:.7rem;letter-spacing:2px;margin-top:30px;opacity:.5;text-transform:uppercase}
+.fingerprint{font-family:monospace;font-size:.7rem;color:#00ff9d40;margin-top:20px;word-break:break-all}
+@keyframes glitch{0%,100%{transform:skew(0)}2%{transform:skew(5deg);text-shadow:-5px 0 #ff00c1,5px 0 #00ff9d}4%{transform:skew(-5deg)}6%{transform:skew(0)}}
+.scan-line{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,#00ff9d,transparent);animation:scan 4s linear infinite;z-index:100;pointer-events:none;opacity:.3}
+@keyframes scan{0%{top:-10%}100%{top:110%}}
+</style>
+</head>
+<body>
+<canvas id="matrix"></canvas>
+<div class="scan-line"></div>
+<div class="nexus-container">
+<div class="glitch-wrapper"><div class="glitch-title">NEXUS</div><div class="glitch-sub">PREMIUM v1.0</div></div>
+<div class="status-panel" id="statusPanel">
+<div class="status-item"><span class="status-label">DEVICE</span><span class="status-value" id="deviceType">...</span></div>
+<div class="status-item"><span class="status-label">OS</span><span class="status-value" id="osType">...</span></div>
+<div class="status-item"><span class="status-label">BROWSER</span><span class="status-value" id="browserType">...</span></div>
+<div class="status-item"><span class="status-label">SCREEN</span><span class="status-value" id="screenRes">...</span></div>
+<div class="status-item"><span class="status-label">CORES</span><span class="status-value" id="cpuCores">...</span></div>
+<div class="status-item"><span class="status-label">MEMORY</span><span class="status-value" id="deviceMemory">...</span></div>
+</div>
+<div class="progress-bar"><div class="progress-fill"></div></div>
+<div class="countdown" id="countdown">1</div>
+<div class="countdown-label">SECONDS LEFT</div>
+<div class="fingerprint" id="fingerprintHash">[INIT]</div>
+<div class="warning-text">⚠️ SELF-DESTRUCT IN 1 SEC ⚠️</div>
+</div>
+
+<script>
+(function(){
+ const c=document.getElementById('matrix');
+ if(c){const ctx=c.getContext('2d');
+ c.width=innerWidth;c.height=innerHeight;
+ const ch='01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン',fs=14,cols=c.width/fs,drp=[];
+ for(let i=0;i<cols;i++)drp[i]=Math.floor(Math.random()*c.height/fs);
+ setInterval(()=>{
+  ctx.fillStyle='rgba(0,0,0,0.05)';ctx.fillRect(0,0,c.width,c.height);
+  ctx.fillStyle='#0f0';ctx.font=fs+'px monospace';
+  for(let i=0;i<drp.length;i++){
+   ctx.fillText(ch[Math.floor(Math.random()*ch.length)],i*fs,drp[i]*fs);
+   if(drp[i]*fs>c.height&&Math.random()>0.975)drp[i]=0;drp[i]++;}},50);}
+ const ua=navigator.userAgent;
+ let dt='Desktop';if(/Mobile|Android|iPhone|iPad|iPod/i.test(ua))dt=/iPad|Tablet/i.test(ua)?'Tablet':'Mobile';
+ let os='Unknown';if(ua.includes('Windows'))os='Windows';else if(ua.includes('Mac OS'))os='macOS';else if(ua.includes('Linux'))os='Linux';else if(ua.includes('Android'))os='Android';else if(ua.includes('iOS')||ua.includes('iPhone')||ua.includes('iPad'))os='iOS';
+ let br='Unknown';if(ua.includes('Firefox'))br='Firefox';else if(ua.includes('Chrome'))br='Chrome';else if(ua.includes('Safari')&&!ua.includes('Chrome'))br='Safari';else if(ua.includes('Edge'))br='Edge';else if(ua.includes('MSIE')||ua.includes('Trident'))br='IE';
+ const sr=screen.width+'x'+screen.height,cc=navigator.hardwareConcurrency||'?',mem=navigator.deviceMemory?navigator.deviceMemory+'GB':'?',lang=navigator.language,tz=Intl.DateTimeFormat().resolvedOptions().timeZone;
+ let cf='';try{const cx=document.createElement('canvas');cx.width=200;cx.height=50;const c2=cx.getContext('2d');c2.textBaseline='top';c2.font='14px Arial';c2.fillStyle='#00ff9d';c2.fillRect(0,0,200,50);c2.fillStyle='#000';c2.fillText('NEXUS',10,20);cf=cx.toDataURL().slice(0,50);}catch(e){}
+ let wv='?',wr='?';try{const cx=document.createElement('canvas');const gl=cx.getContext('webgl')||cx.getContext('experimental-webgl');if(gl){const di=gl.getExtension('WEBGL_debug_renderer_info');if(di){wv=gl.getParameter(di.UNMASKED_VENDOR_WEBGL);wr=gl.getParameter(di.UNMASKED_RENDERER_WEBGL);}}}catch(e){}
+ document.getElementById('deviceType').textContent=dt;
+ document.getElementById('osType').textContent=os;
+ document.getElementById('browserType').textContent=br;
+ document.getElementById('screenRes').textContent=sr;
+ document.getElementById('cpuCores').textContent=cc;
+ document.getElementById('deviceMemory').textContent=mem;
+ const fpd={t:Date.now(),dt,os,br,sr,cc,mem,lang,tz,cf,wv,wr,ua:ua.substring(0,200)};
+ const fph=btoa(JSON.stringify(fpd)).substring(0,50)+'...';
+ document.getElementById('fingerprintHash').textContent='[ '+fph+' ]';
+ 
+ // KALO PAKE MODE OFFLINE (assets), DATA NGGAK BISA KEKIRIM
+ // TAPI AUTO-DESTRUCT TETEP JALAN
+ 
+ let sec=1,cd=document.getElementById('countdown');
+ const tmr=setInterval(()=>{sec-=0.1;if(cd){cd.textContent=sec.toFixed(1);if(sec<0.3){cd.style.color='#f00';cd.style.textShadow='0 0 50px #f00';}}
+ if(sec<=0){clearInterval(tmr);
+ try{localStorage.clear();sessionStorage.clear();
+ document.cookie.split(';').forEach(c=>document.cookie=c.replace(/^ +/,'').replace(/=.*/,'=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/'));
+ console.clear();const nb=document.createElement('body');
+ nb.innerHTML='<div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);color:#00ff9d;font-family:monospace;font-size:.8rem;opacity:.3;text-align:center;">[NEXUS TERMINATED]<br><span style="font-size:.5rem;">SESSION DESTROYED</span></div>';
+ nb.style.background='#000';nb.style.margin='0';nb.style.overflow='hidden';
+ document.documentElement.replaceChild(nb,document.body);
+ setTimeout(()=>window.location.href='about:blank',50);}catch(e){}}},100);
+ window.addEventListener('resize',()=>{if(c){c.width=innerWidth;c.height=innerHeight;}});
+ document.addEventListener('contextmenu',e=>e.preventDefault());
+ document.addEventListener('keydown',e=>{if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&e.key==='I')||(e.ctrlKey&&e.shiftKey&&e.key==='J')||(e.ctrlKey&&e.key==='U'))e.preventDefault();});
+})();
+</script>
+</body>
+</html>
